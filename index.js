@@ -22,9 +22,21 @@ const PORT = 3000;
 const graphqlEndpont = "/graphql";
 
 var app = express();
-app.use(graphqlEndpont, bodyParser.json(), graphqlExpress({ schema }));
+app.use(
+  graphqlEndpont,
+  bodyParser.json(),
+  graphqlExpress({
+    schema,
+    context: {
+      models,
+      user: {
+        id: 1
+      }
+    }
+  })
+);
 app.use("/graphiql", graphiqlExpress({ endpointURL: graphqlEndpont }));
 
-models.sequelize.sync({ force: true }).then(() => {
+models.sequelize.sync({}).then(() => {
   app.listen(PORT);
 });
